@@ -69,7 +69,6 @@ public class LoanServiceImpl implements LoanService {
     private final LoanrepaymentpendingapprovalRepo loanrepaymentpendingapprovalRepo;
     private final LoansrepaymentRepo loansrepaymentRepo;
     private final ContributionRepository contributionRepository;
-    private final FileHandlerServiceImpl fileHandlerService;
     private final GuarantorsRepository guarantorsRepository;
     private final AccountsRepository accountsRepository;
     private final TransactionlogsRepo transactionlogsRepo;
@@ -1183,7 +1182,7 @@ public class LoanServiceImpl implements LoanService {
                                         .membername(String.format("%s %s", loanedMember.getFirstname(), loanedMember.getLastname()))
                                         .memberphone(loanedMember.getPhonenumber())
                                         .receiptnumber(p.getReceiptnumber())
-                                        .receiptImageUrl(fileHandlerService.getFileUrl(p.getReceiptImageUrl()))
+                                        .receiptImageUrl(p.getReceiptImageUrl())
                                         .loanpaymentid(p.getId())
                                         .transamount(p.getAmount())
                                         .paymentDate(p.getCreatedOn())

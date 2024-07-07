@@ -4,7 +4,7 @@ file:
 
 spring:
   application:
-    name: CHAMA-PAYMENTS
+    name: PAYMENTS-SERVICE
   main:
     allow-bean-definition-overriding: true
 

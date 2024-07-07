@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -22,6 +23,7 @@ import java.util.Date;
 @EnableCaching
 @EnableScheduling
 @SpringBootApplication
+@LoadBalancerClient(name = "PAYMENTS-SERVICE")
 @ConfigurationProperties(prefix = "spring.mail")
 public class ChamaPaymentsApplication implements CommandLineRunner {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChamaPaymentsApplication.class);
@@ -31,7 +33,7 @@ public class ChamaPaymentsApplication implements CommandLineRunner {
     }
 
     @Bean
-    public Gson gson(){
+    public Gson gson() {
         return new Gson();
     }
 
@@ -50,6 +52,6 @@ public class ChamaPaymentsApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-      LOGGER.info("PAYMENT SERVICE STARTED SUCCESSFULLY AT : {} ", new Date(System.currentTimeMillis()));
+        LOGGER.info("PAYMENT SERVICE STARTED SUCCESSFULLY AT : {} ", new Date(System.currentTimeMillis()));
     }
 }
