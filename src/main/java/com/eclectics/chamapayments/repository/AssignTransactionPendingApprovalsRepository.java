@@ -1,0 +1,19 @@
+package com.eclectics.chamapayments.repository;
+
+import com.eclectics.chamapayments.model.AssignTransactionPendingApprovals;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AssignTransactionPendingApprovalsRepository extends JpaRepository<AssignTransactionPendingApprovals, Long> {
+
+    AssignTransactionPendingApprovals findFirstByIdAndGroupIdAndApprovedFalseAndPendingTrueAndTransactionActedOnFalseOrderByIdDesc(long id, long groupId);
+
+    AssignTransactionPendingApprovals findFirstByIdAndGroupIdAndOtherTransactionIdAndApprovedTrueAndPendingFalseAndTransactionActedOnTrueOrderByIdDesc(long id, long groupId, long otherTransactionId);
+
+    AssignTransactionPendingApprovals findFirstByGroupIdAndOtherTransactionIdAndApprovedFalseAndPendingTrueAndRejectedFalseAndTransactionActedOnFalseOrderByIdDesc(long groupId, long transactionId);
+
+    AssignTransactionPendingApprovals findFirstByGroupIdAndOtherTransactionIdAndApprovedTrueAndPendingFalseAndTransactionActedOnTrueOrderByIdDesc(long groupId, long transactionId);
+
+    Page<AssignTransactionPendingApprovals> findAllByGroupIdAndApprovedFalseAndPendingTrueAndTransactionActedOnFalseAndSoftDeleteFalseOrderByIdAsc(long groupId, Pageable pageable);
+}

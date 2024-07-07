@@ -1,0 +1,184 @@
+file:
+  server:
+    host: http://192.168.20.124:8200
+
+spring:
+  application:
+    name: CHAMA-PAYMENTS
+  main:
+    allow-bean-definition-overriding: true
+
+  task:
+    scheduling:
+      pool:
+        size: 10
+
+  datasource:
+    username: JOSHUA_MCHAMA
+    url: jdbc:oracle:thin:@10.1.3.11:1526/ESBPDBDEV
+    password: MCHAMA123
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 15000
+      max-lifetime: 35000
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      validationTimeout: 300000
+      pool-name: HikariPoolPayments
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+
+  #Flyway
+  flyway:
+    url: jdbc:oracle:thin:@10.1.3.11:1526/ESBPDBDEV
+    user: JOSHUA_MCHAMA
+    password: MCHAMA123
+    baselineOnMigrate: true
+    enabled: false
+    table: POSTBANK_MCHAMA_UAT
+    driver-class-name: oracle.jdbc.OracleDriver
+    create-schemas: true
+    schemas: POSTBANK_MCHAMA_UAT
+    locations: classpath:db/migration
+
+
+  redis:
+    #    password:
+    #    database:
+    host: 192.168.20.124
+    port: 6379
+    lettuce:
+      pool:
+        max-active: 15
+        max-idle: 15
+        min-idle: 15
+        max-wait: 10000
+
+    servlet:
+      multipart:
+        max-file-size: 10000KB
+        max-request-size: 10000KB
+
+    security:
+      oauth2:
+        resourceserver:
+          jwt:
+            issuer-uri: http://localhost:8772
+
+
+  cloud:
+    function:
+      definition: createMemberWallet;createGroupContribution;createGroupAccount;enableGroupContributions;disableGroupContributions;editContributionName;fundsTransferCallback;createLoanProduct;writeOffLoansAndPenalties;
+    stream:
+      kafka:
+        binder:
+          brokers: 192.168.20.124:9092
+          auto-create-topics: true
+      bindings:
+        createMemberWallet-in-0:
+          group: create-member-wallet-group
+        createGroupContribution-in-0:
+          group: create-group-contribution-group
+        createGroupAccount-in-0:
+          group: create-group-account-group
+        enableGroupContributions-in-0:
+          group: enableGroupContributions-group
+        disableGroupContributions-in-0:
+          group: disable-group-contributions-group
+        editContributionName-in-0:
+          destination: contribution-name-edit-topic
+          group: contribution-name-edit-group
+        fundsTransferCallback-in-0:
+          destination: callback-topic
+          group: callback-topic-group
+        createLoanProduct-in-0:
+          group: create-loan-product-group
+        writeOffLoansAndPenalties-in-0:
+          group: writeOffLoansAndPenalties-group
+
+  #EMAIL CONFIGURATIONS
+  mail:
+    host: 10.1.1.213
+    port: 25
+    username: mbanking@postbank.co.ke
+    password: opengates123!
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  health:
+    rabbit:
+      enabled: false
+
+app-configs:
+  esb-url: http://10.20.2.12:8082/api/EsbPublicService
+
+
+auth:
+  baseUrl: http://192.168.20.124:8200/
+  mobile:
+    username: chama_clientid
+    password: Y2hhbWFzZWNyZXQ=
+
+app:
+  security:
+    jwt:
+      keystore-name: authorization.p12
+      keystore-password: RSwr$%@8L?
+      key-alias: eclectics-auth
+
+esb:
+  channel:
+    uri: http://192.168.20.18:8092/ChannelAPI
+  accounts:
+    account: https://192.168.20.24:9193/mchama/api/customer-by-account
+    phone:
+  statement: http://192.168.20.18:8734/api/service/WS001-Get-Full-Statement
+
+statement:
+  url: http://192.168.20.18:8583/getStatementData
+
+email:
+  host: 10.1.1.213
+  port: 25
+  username: mbanking@postbank.co.ke
+  password: opengates123!
+
+auth-esb:
+  wallet: Basic ZTAxMWVkYjY2YTQwOmUzOTNiNzYwLWU2MzQtNGUzNC1iNTQ4LWRkMDZjZjc1NDY2Yg==
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://192.168.20.124:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+
+logging:
+  level:
+    org:
+      apache:
+        kafka: off
+
+encrypt:
+  body:
+    aes-key: 12345678 # for testing purposes only! A stronger password should be used
